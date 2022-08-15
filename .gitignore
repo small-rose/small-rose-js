@@ -1,0 +1,5 @@
+/.idea/
+/target/
+jsLog.log
+
+src/main/resources/application-prod.yml
