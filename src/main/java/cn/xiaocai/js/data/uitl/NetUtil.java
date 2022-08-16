@@ -1,9 +1,11 @@
 package cn.xiaocai.js.data.uitl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.net.ssl.*;
@@ -13,6 +15,7 @@ import java.net.UnknownHostException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,7 +27,95 @@ import java.util.concurrent.TimeUnit;
  **/
 @Slf4j
 public class NetUtil {
-
+    /**
+     * html
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    public static Connection.Response getResponse(String url) {
+        Connection.Response response = null;
+        try{
+            //System.out.println("get : url : "+url);
+            trustEveryone();
+            log.info("url-----" + url);
+            Connection connect = Jsoup.connect(url).timeout(150000).userAgent(ConstantUtils.getAgent());
+            connect.cookieStore();
+            response = connect.execute();
+            return response;
+        }catch (HttpStatusException e) {
+            // TODO: handle exception
+            int code = e.getStatusCode();
+            if(code ==404){
+                return response;
+            }
+        }catch (SocketTimeoutException e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return response;
+        }
+        catch (UnknownHostException e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return response;
+        }
+        catch(IOException e){
+            System.out.println("IOException : url : "+url);
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return response ;
+    }
+    /**
+     * html
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    public static Document getDocument(String url, String referer,Map<String, String> headerMap,Map<String, String> cookiesMap) {
+        Document doc = null;
+        try{
+            //System.out.println("get : url : "+url);
+            trustEveryone();
+            log.info("url-----" + url);
+            Connection connect = Jsoup.connect(url).timeout(150000).userAgent(ConstantUtils.getAgent());
+            if (StringUtils.hasText(referer)){
+                connect.referrer(referer);
+            }
+            if (!CollectionUtils.isEmpty(headerMap)){
+                connect.headers(headerMap);
+            }
+            if (StringUtils.hasText(referer)){
+                connect.cookies(cookiesMap);
+            }
+            connect.cookieStore();
+            doc = connect.get();
+            return doc;
+        }catch (HttpStatusException e) {
+            // TODO: handle exception
+            int code = e.getStatusCode();
+            if(code ==404){
+                return doc;
+            }
+        }catch (SocketTimeoutException e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return doc;
+        }
+        catch (UnknownHostException e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return doc;
+        }
+        catch(IOException e){
+            System.out.println("IOException : url : "+url);
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return doc ;
+    }
     /**
      * html
      * @param url
@@ -48,6 +139,7 @@ public class NetUtil {
             trustEveryone();
             log.info("url-----" + url);
             if (StringUtils.hasText(referer)){
+
                 doc = Jsoup.connect(url).timeout(15000).userAgent(ConstantUtils.getAgent()).get();
             }else {
                 doc = Jsoup.connect(url).timeout(15000).userAgent(ConstantUtils.getAgent()).referrer(referer).get();

@@ -2,11 +2,13 @@ package cn.xiaocai.js.data.controller;
 
 import cn.xiaocai.js.data.config.fuzhu.CacheManager;
 import cn.xiaocai.js.data.persistence.service.SearchService;
-import cn.xiaocai.js.data.servce.ArticleRankTaskService;
+import cn.xiaocai.js.data.servce.rank.ArticleRankTaskService;
+import cn.xiaocai.js.data.servce.rank.UpdateNickNameTaskService;
+import cn.xiaocai.js.data.servce.subject.SubjectDataInfoTaskService;
 import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import kong.unirest.UnirestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -37,9 +39,14 @@ public class OpenApiController {
     @Autowired
     private ArticleRankTaskService articleRankTaskService;
     @Autowired
+    private UpdateNickNameTaskService updateNickNameTaskService;
+    @Autowired
     private SearchService searchService;
     @Autowired
     CacheManager cacheManager ;
+
+    @Autowired
+    SubjectDataInfoTaskService subjectDataInfoTaskService;
 
     @GetMapping("/cache/{number}")
     @ApiOperation(value = "执行入口-删除某日期数据",response = String.class)
@@ -98,6 +105,57 @@ public class OpenApiController {
                 return result ;
             }
             articleRankTaskService.catchRankData(start, end);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            result = "ERROR:" +e.getLocalizedMessage();
+        }
+        return result;
+    }
+    @GetMapping("/update")
+    @ApiOperation(value = "更新入口-更新日期区间昵称",response = String.class)
+    public String update( ) {
+        String result = "SUCCESS";
+
+        try {
+            updateNickNameTaskService.updateNickName(null);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            result = "ERROR:" +e.getLocalizedMessage();
+        }
+        return result;
+    }
+
+    @GetMapping("/update/{start}/{end}")
+    @ApiOperation(value = "更新入口-更新日期区间昵称",response = String.class)
+    public String update(@PathVariable(name = "start") String start, @PathVariable(name = "end") String end) {
+        String result = "SUCCESS";
+
+        try {
+            if (!isValidDate(start) || !isValidDate(end) ){
+                result = "日期格式非法，请使用格式yyyyMMdd";
+                return result ;
+            }
+            updateNickNameTaskService.update(start, end);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            result = "ERROR:" +e.getLocalizedMessage();
+        }
+        return result;
+    }
+
+
+
+    @GetMapping("/lishihui/{begin}/{end}")
+    @ApiOperation(value = "抓取[理事会推文]专题文章信息",response = String.class)
+    public String wenyouhui(@PathVariable(name = "begin") int begin,
+                          @PathVariable(name = "end") int end) {
+        String result = "SUCCESS";
+
+        try {
+            if (begin<1 || end >20){
+                return "值非法";
+            }
+            subjectDataInfoTaskService.start("f61832508891", begin, end);
         } catch (UnirestException e) {
             e.printStackTrace();
             result = "ERROR:" +e.getLocalizedMessage();

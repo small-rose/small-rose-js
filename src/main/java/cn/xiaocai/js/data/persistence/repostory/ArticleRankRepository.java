@@ -26,7 +26,7 @@ public interface ArticleRankRepository extends JpaRepository<ArticleRank,Long> {
 
 
     @Query(value = "select t.* from JS_ARTICLE_RANK t where t.author_nickname = ?1  order by t.rank_date desc limit ?2 ",nativeQuery = true )
-    List<ArticleRank> findByName(String name,long limit );
+    List<ArticleRank> findByName(String name, long limit );
 
     @Query(value = "select count(1) from JS_ARTICLE_RANK  where author_nickname = ?1  order by rank_date desc ",nativeQuery = true )
     Long countByName(String name);
@@ -38,4 +38,12 @@ public interface ArticleRankRepository extends JpaRepository<ArticleRank,Long> {
 
     @Query(value = "select count(1) from JS_ARTICLE_RANK  where rank_date = ?1 ",nativeQuery = true )
     Long countByDate(String yyyyMMdd);
+
+    @Query(value = "select t.* from JS_ARTICLE_RANK t where t.slug = ?1  ",nativeQuery = true )
+    List<ArticleRank> findBySlug(String slug);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update  JS_ARTICLE_RANK set author_nickname = ?2 , author_nickname_py =?3 where slug = ?1 ",nativeQuery = true )
+    Integer updateNickNameBySlug(String slug, String newNickName, String pinyinString);
 }

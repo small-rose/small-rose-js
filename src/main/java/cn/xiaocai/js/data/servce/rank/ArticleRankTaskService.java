@@ -1,19 +1,19 @@
-package cn.xiaocai.js.data.servce;
+package cn.xiaocai.js.data.servce.rank;
 
+import cn.xiaocai.js.data.constans.JSConstants;
 import cn.xiaocai.js.data.persistence.entity.ArticleRank;
 import cn.xiaocai.js.data.persistence.entity.SpiderLog;
 import cn.xiaocai.js.data.persistence.repostory.ArticleRankRepository;
 import cn.xiaocai.js.data.persistence.repostory.SpiderLogRepository;
+import cn.xiaocai.js.data.persistence.service.SpiderLogService;
 import cn.xiaocai.js.data.uitl.DateUtil;
+import cn.xiaocai.js.data.uitl.PinYinSmallUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.stuxuhai.jpinyin.PinyinException;
-import com.github.stuxuhai.jpinyin.PinyinFormat;
-import com.github.stuxuhai.jpinyin.PinyinHelper;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
+import kong.unirest.GetRequest;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,6 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,11 +36,12 @@ import java.util.List;
 public class ArticleRankTaskService {
 
     @Autowired
+    private SpiderLogService spiderLogService;
+    @Autowired
     private ArticleRankRepository articleRankRepository ;
     @Autowired
     private SpiderLogRepository spiderLogRepository ;
 
-    String URL = "https://www.jianshu.com/asimov/fp_rankings/voter_notes?date=20220729";
 
     public String catchRankData(String start, String end) throws UnirestException {
 
@@ -55,7 +55,7 @@ public class ArticleRankTaskService {
             for (LocalDate billDate : localDates){
                 catchRankData(billDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             }
-            log.info("日期区间{} 到 {} 的数据住区完成！", yyyyMMdd1, yyyyMMdd2);
+            log.info("日期区间{} 到 {} 的数据抓取完成！", yyyyMMdd1, yyyyMMdd2);
         }else{
             yyyyMMdd = start ;
             List<SpiderLog> list = spiderLogRepository.selectByRankDateRankType(yyyyMMdd, "AR");
@@ -71,7 +71,7 @@ public class ArticleRankTaskService {
             }
             String result = catchAndSaveRankData(yyyyMMdd);
 
-            SpiderLog spiderLog = saveLog(yyyyMMdd, result);
+            spiderLogService.saveLog(yyyyMMdd, result,"AR");
             //list.stream().forEach(System.out::println);
         }
 
@@ -112,24 +112,21 @@ public class ArticleRankTaskService {
         }
         String result = catchAndSaveRankData(yyyyMMdd);
 
-        SpiderLog spiderLog = saveLog(yyyyMMdd, result);
+        spiderLogService.saveLog(yyyyMMdd, result,"AR");
         //list.stream().forEach(System.out::println);
         return  "SUCCESS";
     }
 
 
-    private String catchAndSaveRankData(String yyyyMMdd) throws UnirestException {
+    public String catchAndSaveRankData(String yyyyMMdd) throws UnirestException {
         log.info("开始抓取 " + yyyyMMdd +" 的文章排名数据！");
-        GetRequest getRequest = Unirest.get("https://www.jianshu.com/asimov/fp_rankings/voter_notes?date="+yyyyMMdd);
+        GetRequest getRequest = Unirest.get(JSConstants.RANK_URL_PRE +yyyyMMdd);
         HttpResponse<String> stringResult = getRequest.asString();
         int status = stringResult.getStatus();
         if (status!=200 ){
             log.info("---抓取排名接口异常");
             return "Fail|"+status ;
         }
-        //System.out.println("Status: " + status);
-        //System.out.println("StatusText: " +stringResult.getStatusText());
-        //System.out.println("Headers: " +stringResult.getHeaders());
         String body = stringResult.getBody();
         JSONObject responseJson = JSONObject.parseObject(body);
         String respDate = (String) responseJson.get("date");
@@ -155,14 +152,7 @@ public class ArticleRankTaskService {
                 articleRank.setAuthor_nickname("该用户不在简书");
             }
 
-            String pinyinString = null;
-            try {
-                pinyinString = PinyinHelper.convertToPinyinString(articleRank.getAuthor_nickname(), "", PinyinFormat.WITHOUT_TONE);
-            } catch (PinyinException e) {
-                log.info("转换失败 ： " + articleRank.getAuthor_nickname());
-                e.printStackTrace();
-            }
-            articleRank.setAuthor_nickname_py(pinyinString);
+            articleRank.setAuthor_nickname_py(PinYinSmallUtil.getPinYin(articleRank.getAuthor_nickname()));
             //System.out.println(articleRank.toString());
         }
 
@@ -172,30 +162,7 @@ public class ArticleRankTaskService {
     }
 
 
-    private SpiderLog saveLog(String yyyyMMdd, String result){
-        //保存结果
 
-        List<SpiderLog> list = spiderLogRepository.selectByRankDateRankType(yyyyMMdd, "AR");
-        SpiderLog spiderLog = null;
-        if (CollectionUtils.isEmpty(list)){
-            spiderLog = new SpiderLog();
-            spiderLog.setRank_date(yyyyMMdd);
-            spiderLog.setRank_type("AR");
-        }else{
-            spiderLog = list.get(0);
-
-        }
-        spiderLog.setExec_time(new Date());
-        if (result.startsWith("SUCCESS")){
-            spiderLog.setResult("SUCCESS");
-            spiderLog.setStatus("S");
-        }else{
-            spiderLog.setResult(result);
-            spiderLog.setStatus("F");
-        }
-        spiderLog =  spiderLogRepository.save(spiderLog);
-        return spiderLog ;
-    }
 
 
 }
