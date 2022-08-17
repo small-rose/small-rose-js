@@ -1,5 +1,6 @@
 /.idea/
 /target/
-jsLog.log
+/logs/**
+jsLog.log*
 
 src/main/resources/application-prod.yml
