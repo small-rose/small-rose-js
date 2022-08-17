@@ -13,7 +13,7 @@ public class SmallRoseJsApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SmallRoseJsApplication.class, args);
-        System.out.println("S-M-J-S Server Started Success !");
+        System.out.println("Small-JS Server Started Success !");
     }
 
 }
