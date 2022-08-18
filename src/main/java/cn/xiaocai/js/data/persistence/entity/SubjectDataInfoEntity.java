@@ -46,9 +46,10 @@ public class SubjectDataInfoEntity {
     @Column(columnDefinition = "longtext")
     private String rewards ;
 
-
-    private Date updateTime ; //收录时间，以扫描的时间为准
-    private String shouDate ; //收录时间，以扫描的时间为准
+    //收录时间，以扫描的时间为准
+    private Date updateTime ;
+    //收录时间，以扫描的时间为准
+    private String shouDate ;
     private int lpReward ;
     private String recommender ;
     private String recommenderSlug ;
