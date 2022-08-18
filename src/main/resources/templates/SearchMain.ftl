@@ -145,6 +145,9 @@
         border-color: #666666;
         background-color: #ffffff;
     }
+    footer{
+        height: 20px;
+    }
 </style>
 <body>
 <div class="ui text container">
@@ -223,6 +226,9 @@
             </div>
         </div>
     </div>
+    <footer>
+        <p id="foot"> </p>
+    </footer>
 </div>
 </body>
 </html>
