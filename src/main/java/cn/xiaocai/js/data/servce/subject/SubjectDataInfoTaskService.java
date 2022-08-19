@@ -191,8 +191,8 @@ public class SubjectDataInfoTaskService extends BaseService {
             boolean b1 = RECOMMENDER_name.stream().anyMatch(n -> n.contains(commentVO.getUser().getNickname()));
             boolean b2 = keys1.stream().anyMatch(t -> finalCompiledContent.contains(t));
             boolean b3 = keys2.stream().anyMatch(t -> finalCompiledContent.contains(t));
-            System.out.println(" (评论有推荐人)b0 = " + b0 +", (评论人是推荐人)b1 = " +b1 +", (评论喊伯乐、编辑、理事会)b2 = " +b2 +", (评论含推荐)b3 = " +b3 +" , 评论人 ："+commentVO.getUser().getNickname());
             if (b0 || ( b1 && b2 && b3)){
+                System.out.println(" (评论有推荐人)b0 = " + b0 +", (评论人是推荐人)b1 = " +b1 +", (评论喊伯乐、编辑、理事会)b2 = " +b2 +", (评论含推荐)b3 = " +b3 +" , 评论人 ："+commentVO.getUser().getNickname());
                 boolean containsSlug = RECOMMENDER_slug.contains(commentVO.getUser().getSlug());
                 log.info(" containsSlug = "+containsSlug);
                 if (!containsSlug){
