@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -136,8 +138,9 @@ public class SubjectDataInfoTaskService extends BaseService {
             if (jsUserVO!=null) {
                 wenStory.setRecommender(jsUserVO.getNickname());
                 wenStory.setRecommenderSlug(jsUserVO.getSlug());
-                wenStory.setShou_date(new Date());
             }
+            wenStory.setUpdateTime(new Date());
+            wenStory.setShouDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             wenStory.setSubjectId(subjectId);
             subjectDataInfoService.saveData(wenStory);
 
