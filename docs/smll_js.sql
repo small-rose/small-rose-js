@@ -1,3 +1,4 @@
+
 -- auto-generated definition
 create table js_article_rank
 (
@@ -13,7 +14,7 @@ create table js_article_rank
     slug               varchar(255) null comment '用户slug',
     title              varchar(255) null comment '文章标题',
     voter_fp           varchar(255) null comment '点赞收益'
-)ENGINE=InnoDB;
+)ENGINE=InnoDB  comment '上榜数据';
 
 create table js_spider_log
 (
@@ -25,7 +26,7 @@ create table js_spider_log
     result        varchar(255) null comment '结果',
     status        varchar(255) null comment '执行状态',
     update_result varchar(255) null  comment '执行结果'
-)ENGINE=InnoDB;
+)ENGINE=InnoDB comment '上榜抓取日志';
 
 
 -- auto-generated definition
@@ -35,10 +36,10 @@ create table js_user_info
         primary key ,
     nick_name    varchar(255) null comment '用户昵称',
     nick_name_py varchar(255) null comment '用户昵称拼音',
-    precommender int          not null comment '是否是推荐人1-是，0-否',
+    precommender int          not null comment '是否是推荐人',
     slug         varchar(255) null comment '用户slug',
     slug_url     varchar(255) null comment '主页地址'
-)ENGINE=InnoDB;
+)ENGINE=InnoDB comment '简书用户表';
 
 -- 专题表
 create table js_subject_info
@@ -48,14 +49,14 @@ create table js_subject_info
     subject_slug varchar(255) null comment '专题slug',
     title        varchar(255) null comment '专题名称',
     title_py     varchar(255) null comment '专题名称拼音'
-)ENGINE=InnoDB;
+)ENGINE=InnoDB comment '简书专题表';
 
 -- auto-generated definition
 create table js_subject_data_info
 (
     id               bigint       not null comment '主键ID'
         primary key,
-    comments         longtext     null comment '专题slug',
+    comments         longtext     null comment '评论数据',
     lp_reward        int   default  0  not null comment '理事会赞赏',
     nick_name        varchar(255) null comment '作者昵称',
     recommender      varchar(255) null comment '推荐人',
@@ -68,11 +69,5 @@ create table js_subject_data_info
     wen_id           varchar(255) null comment '文章id',
     wen_slug         varchar(255) null comment '文章slug',
     wen_url          varchar(255) null comment '文章地址'
-)ENGINE=InnoDB;
-
-
-
-
-
-
+)ENGINE=InnoDB comment '简书数据表';
 
