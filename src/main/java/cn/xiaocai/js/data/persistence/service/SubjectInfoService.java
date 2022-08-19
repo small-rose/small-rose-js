@@ -22,7 +22,7 @@ public class SubjectInfoService {
     @Autowired
     private SubjectInfoRepostory subjectInfoRepostory ;
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     public void save(SubjectInfoEntity subjectInfoEntity){
 
         Optional<SubjectInfoEntity> subjectInfo = subjectInfoRepostory.findBySubjectSlug(subjectInfoEntity.getSubjectSlug());
@@ -31,7 +31,7 @@ public class SubjectInfoService {
         }
     }
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     public void saveAll(List<SubjectInfoEntity> subjectInfoEntityList){
         subjectInfoRepostory.saveAll(subjectInfoEntityList);
     }

@@ -70,4 +70,26 @@ public class CvsUtils {
         }
         return result;
     }
+
+
+    public static List<String> getCsvDataMethod2(File file) {
+        ArrayList<String> csvFileList = new ArrayList<>();
+        InputStreamReader in = null;
+        String s = null;
+        try {
+            in = new InputStreamReader(new FileInputStream(file), "utf-8");
+            BufferedReader bufferedReader = new BufferedReader(in);
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (!StringUtils.hasText(line)){
+                    continue;
+                }
+
+                csvFileList.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return csvFileList;
+    }
 }
