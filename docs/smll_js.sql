@@ -9,7 +9,7 @@ create table js_article_rank
     author_nickname    varchar(255) null comment '作者昵称',
     author_nickname_py varchar(255) null comment '作者昵称拼音',
     fp                 varchar(255) null comment '总收益',
-    rank_date          varchar(255) null comment '上班日期',
+    rank_date          varchar(255) null comment '上榜日期',
     rank_no            int          null comment '上榜排名',
     slug               varchar(255) null comment '用户slug',
     title              varchar(255) null comment '文章标题',
@@ -49,9 +49,10 @@ create table js_subject_info
     subject_slug varchar(255) null comment '专题slug',
     title        varchar(255) null comment '专题名称',
     title_py     varchar(255) null comment '专题名称拼音'
-)ENGINE=InnoDB comment '简书专题表';
+)ENGINE=InnoDB comment '简书专题信息表';
 
 -- auto-generated definition
+drop table  js_subject_data_info ;
 create table js_subject_data_info
 (
     id               bigint       not null comment '主键ID'
@@ -62,12 +63,13 @@ create table js_subject_data_info
     recommender      varchar(255) null comment '推荐人',
     recommender_slug varchar(255) null comment '推荐人slug',
     rewards          longtext     null comment '赞赏数据',
-    shou_date        datetime     null comment '收录日期',
+    shou_date        varchar(10)     null comment '收录日期',
+    update_time      datetime     null comment '更新时间',
     subject_id       varchar(255) null comment '专题slug',
     title            varchar(255) null comment '文章标题',
     user_slug        varchar(255) null comment '用户slug',
     wen_id           varchar(255) null comment '文章id',
     wen_slug         varchar(255) null comment '文章slug',
     wen_url          varchar(255) null comment '文章地址'
-)ENGINE=InnoDB comment '简书数据表';
+)ENGINE=InnoDB comment '简书专题数据表';
 
