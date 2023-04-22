@@ -195,7 +195,7 @@
                     <li>每日自动抓取前一日排名。</li>
                     <li>支持拼音搜索。</li>
                     <li>简书昵称以最新昵称为准,昵称改动会有数据延迟。</li>
-                    <li>搜索结果显示最近30天的上榜记录。</li>
+                    <li>搜索结果显示最近30次的上榜记录。</li>
                     <li>累计上榜统计数据自2022年7月1日开始。</li>
                     <li>Copyright ©2022 <a href="https://www.jianshu.com/u/6d987327d72a" target="_blank">残阳丹落枫</a> | <a href="https://www.jianshu.com/u/15bae9b0b85f" target="_blank">心有玲兮</a> All Rights Reserved.</li>
                 </ul>
