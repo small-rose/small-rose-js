@@ -36,7 +36,7 @@ create table js_user_info
         primary key ,
     nick_name    varchar(255) null comment '用户昵称',
     nick_name_py varchar(255) null comment '用户昵称拼音',
-    precommender int          not null comment '是否是推荐人',
+    precommender int          not null comment '是否推荐人1-是0-否',
     slug         varchar(255) null comment '用户slug',
     slug_url     varchar(255) null comment '主页地址'
 )ENGINE=InnoDB comment '简书用户表';

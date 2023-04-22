@@ -50,6 +50,7 @@ public class SubjectDataInfoEntity {
     private Date updateTime ;
     //收录时间，以扫描的时间为准
     private String shouDate ;
+    private Date shouTime ;
     private int lpReward ;
     private String recommender ;
     private String recommenderSlug ;

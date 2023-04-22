@@ -5,6 +5,8 @@ import cn.xiaocai.js.data.persistence.repostory.SubjectDataInfoRepostory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * @description: TODO 功能角色说明：
  * TODO 描述：
@@ -29,6 +31,7 @@ public class SubjectDataInfoService {
             ztData.setNickName(data.getNickName());
             ztData.setRecommender(data.getRecommender());
             ztData.setRecommenderSlug(data.getRecommenderSlug());
+            ztData.setUpdateTime(new Date());
             subjectDataInfoRepostory.saveAndFlush(ztData);
         }
     }

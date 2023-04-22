@@ -54,7 +54,7 @@ public class AppTask {
     }
 
 
-    @Scheduled(cron = "0 0 0/1 * * ? ")
+    //@Scheduled(cron = "0 0/20 * * * ? ")
     public void jsLpTask(){
 
         log.info("简书专题[理事会点赞汇总]任务开始执行！！");

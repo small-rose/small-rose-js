@@ -142,6 +142,7 @@ public class SubjectDataInfoTaskService extends BaseService {
             wenStory.setUpdateTime(new Date());
             wenStory.setShouDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             wenStory.setSubjectId(subjectId);
+            wenStory.setShouTime(new Date());
             subjectDataInfoService.saveData(wenStory);
 
             JUserInfo user = new JUserInfo();
@@ -183,7 +184,7 @@ public class SubjectDataInfoTaskService extends BaseService {
         String compiledContent = "";
         for (CommentVO commentVO : list){
             compiledContent = commentVO.getCompiled_content();
-            final String finalCompiledContent = compiledContent;
+            final String finalCompiledContent = StringUtils.hasText(compiledContent)? compiledContent:"";
 
 
             System.out.println(finalCompiledContent);
